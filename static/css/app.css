@@ -358,3 +358,150 @@ textarea:focus {
 .modal-body>input:hover {
     border-color: #3a86ffd4;
 }
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .note-container {
+        padding: 15px;
+    }
+    
+    .stack .layer_1 .layer_2 .layer_3 {
+        padding: 12px;
+    }
+
+    .footer {
+        padding: 0 15px;
+        flex-direction: column;
+        height: auto;
+        gap: 10px;
+    }
+
+    .opt {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .github-link {
+        display: none; /* 移动端隐藏 GitHub 链接 */
+    }
+
+    /* 优化移动端模态框 */
+    .modal-content {
+        width: 90%;
+        margin: 10px;
+        padding: 20px;
+    }
+
+    .modal-body {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .modal-body > input {
+        width: 100%;
+        padding: 8px;
+    }
+
+    .modal-body > .opt-button {
+        width: 100%;
+        margin: 0;
+        padding: 8px 0;
+    }
+}
+
+/* UI 美化 */
+.stack .layer_1 .layer_2 .layer_3 {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.opt-button {
+    transition: all 0.2s ease;
+    padding: 6px 12px;
+    font-weight: 500;
+}
+
+.opt-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(58,134,255,0.2);
+}
+
+/* 添加滚动条美化 */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* 优化加载状态显示 */
+#loading {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 8px 16px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    border-radius: 4px;
+    font-size: 14px;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 优化错误提示样式 */
+.error-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    background: #ff4d4f;
+    color: white;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+/* 优化文本区域 */
+.contents {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    color: #2c3e50;
+    padding: 10px !important;
+}
+
+/* 优化开关按钮 */
+.opt-switcher .slider {
+    transition: .3s ease-in-out;
+}
+
+.opt-switcher .slider:before {
+    transition: .3s ease-in-out;
+}
+
+/* 优化分享模态框 */
+.share-modal .modal-content {
+    transition: all 0.3s ease;
+}
+
+.share-modal .modal-mask {
+    backdrop-filter: blur(2px);
+}

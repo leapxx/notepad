@@ -101,7 +101,7 @@ router.post('/:path/pw', async request => {
 
         const { value, metadata } = await queryNote(path)
         const valid = await checkAuth(cookie, path)
-        
+
         if (!metadata.pw || valid) {
             const pw = passwd ? await saltPw(passwd) : undefined
             try {
@@ -111,7 +111,7 @@ router.post('/:path/pw', async request => {
                         pw,
                     },
                 })
-    
+
                 return returnJSON(0, null, {
                     'Set-Cookie': Cookies.serialize('auth', '', {
                         path: `/${path}`,
@@ -136,7 +136,7 @@ router.post('/:path/setting', async request => {
 
         const { value, metadata } = await queryNote(path)
         const valid = await checkAuth(cookie, path)
-        
+
         if (!metadata.pw || valid) {
             try {
                 await NOTES.put(path, value, {

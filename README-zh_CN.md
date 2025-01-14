@@ -58,7 +58,3 @@ SCN_SECRET # 随便填（安全用途）
 - [x] ~~只读模式（分享功能）~~
 - [x] ~~显示上次修改时间~~
 
-## ☕ 捐赠
-
-请我喝奶茶？
-[https://src.moe/donate](https://src.moe/donate)

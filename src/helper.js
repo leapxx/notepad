@@ -42,7 +42,7 @@ export function returnJSON(code, data, headers = {}) {
 
 export async function MD5(str) {
     const msgUint8 = new TextEncoder().encode(str)
-    const hashBuffer = await crypto.subtle.digest('MD5', msgUint8) 
+    const hashBuffer = await crypto.subtle.digest('MD5', msgUint8)
     const hashArray = Array.from(new Uint8Array(hashBuffer))
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
 }
