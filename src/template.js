@@ -57,6 +57,10 @@ const FOOTER = ({ lang, isEdit, updateAt, pw, mode, share }) => `
     <div class="footer" role="toolbar" aria-label="${SUPPORTED_LANG[lang].toolbar || 'Toolbar'}">
         ${isEdit ? `
             <div class="opt">
+                <button class="opt-button opt-copy" aria-label="${SUPPORTED_LANG[lang].copyAll}">
+                    <svg class="icon w-5 h-5" aria-hidden="true"><use href="#icon-copy"></use></svg>
+                    ${SUPPORTED_LANG[lang].copyAll}
+                </button>
                 <button class="opt-button opt-pw" aria-label="${pw ? SUPPORTED_LANG[lang].changePW : SUPPORTED_LANG[lang].setPW}">
                     <svg class="icon w-5 h-5" aria-hidden="true"><use href="#icon-lock"></use></svg>
                     ${pw ? SUPPORTED_LANG[lang].changePW : SUPPORTED_LANG[lang].setPW}

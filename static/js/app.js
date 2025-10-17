@@ -322,6 +322,7 @@ window.addEventListener('DOMContentLoaded', function () {
     const $shareInput = document.querySelector('.share-modal input')
     const $topBar = document.querySelector('#topBar')
     const $btnCopyAll = document.querySelector('#btnCopyAll')
+    const $btnCopyDesktop = document.querySelector('.opt-copy')  // 桌面端复制按钮
     const $btnEdit = document.querySelector('#btnEdit')
     const $btnDone = document.querySelector('#btnDone')
     const $qrBtn = document.querySelector('.opt-qr')
@@ -349,9 +350,16 @@ window.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // 复制全文按钮
+    // 复制全文按钮（移动端）
     if ($btnCopyAll) {
         $btnCopyAll.onclick = function () {
+            copyAllContent()
+        }
+    }
+
+    // 复制全文按钮（桌面端）
+    if ($btnCopyDesktop) {
+        $btnCopyDesktop.onclick = function () {
             copyAllContent()
         }
     }

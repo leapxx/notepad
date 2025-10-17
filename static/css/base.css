@@ -227,6 +227,9 @@ samp {
   position: relative;
   max-width: 210mm;
   min-height: 297mm;
+  height: 100vh;  /* 确保容器占满视口高度 */
+  display: flex;  /* 让它成为 flex 容器 */
+  flex-direction: column;  /* 垂直方向布局 */
   margin: var(--space-8) auto;
   background: var(--color-paper-white);
   box-shadow: var(--shadow-paper);
