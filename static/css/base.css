@@ -260,6 +260,41 @@ samp {
   z-index: 0;
 }
 
+/* Stack 层级布局 - 让内容撑满 A4 纸张 */
+.stack {
+  background: white;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.stack .layer_1,
+.stack .layer_2 {
+  background: white;
+  margin: 0;
+  transform: none;
+  box-shadow: none;
+  border-radius: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.stack .layer_3 {
+  background: white;
+  margin: 0;
+  transform: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.stack .layer_1 .layer_2 .layer_3 {
+  padding: 30mm 25mm;  /* A4 纸张标准页边距 */
+  flex: 1;
+  display: flex;
+  flex-direction: row;  /* 桌面端：编辑器 + 预览左右分栏 */
+}
+
 
 /* ========== 辅助类 ========== */
 

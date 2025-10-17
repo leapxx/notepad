@@ -97,7 +97,10 @@ const MODAL = lang => `
         <span class="close-btn">x</span>
         <div class="modal-body">
             <input type="text" readonly value="" />
-            <button class="opt-button">${SUPPORTED_LANG[lang].copy}</button>
+            <button class="opt-button">
+                <svg class="icon w-5 h-5" aria-hidden="true"><use href="#icon-copy"></use></svg>
+                ${SUPPORTED_LANG[lang].copy}
+            </button>
         </div>
     </div>
 </div>
