@@ -2,7 +2,13 @@ name = "cloud-notepad"
 main = "src/index.js"
 compatibility_date = "2022-05-13"
 
+# KV 配置应该在最外层，不是在 [site] 下
 kv_namespaces = [
-  { binding = "NOTES", id = "849f02ef1a3244e08927a8dd6a19c97e" },
-  { binding = "SHARE", id = "b53bcfb409df4c4b84abdeaf8cc849c6" }
+  { binding = "NOTES", id = "849f02ef1a3244e08927a8dd6a19c97e", preview_id = "2a3cbcdcc65f4384ab0f847afd56072d" },
+  { binding = "SHARE", id = "b53bcfb409df4c4b84abdeaf8cc849c6", preview_id = "52529fe536bc448fa1664ad6d5e2dcbe" }
 ]
+
+# 静态资源配置
+[site]
+bucket = "./static"
+include = ["css/**/*", "js/**/*", "img/**/*"]
