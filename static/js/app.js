@@ -439,8 +439,8 @@ window.addEventListener('DOMContentLoaded', function () {
     }
 
     if ($modeBtn) {
-        $modeBtn.onclick = function (e) {
-            const isMd = e.target.checked
+        $modeBtn.onchange = function (e) {
+            const isMd = this.checked
             const path = window.location.pathname
             window.fetch(`${path}/setting`, {
                 method: 'POST',
@@ -464,8 +464,8 @@ window.addEventListener('DOMContentLoaded', function () {
     }
 
     if ($shareBtn) {
-        $shareBtn.onclick = function (e) {
-            const isShare = e.target.checked
+        $shareBtn.onchange = function (e) {
+            const isShare = this.checked
             const path = window.location.pathname
             window.fetch(`${path}/setting`, {
                 method: 'POST',

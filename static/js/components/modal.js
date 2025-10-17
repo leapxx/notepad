@@ -162,21 +162,5 @@ window.showAlert = function(message, title = '') {
   })
 }
 
-// 辅助函数
-function getI18n(key) {
-  const SUPPORTED_LANG = {
-    'en': {
-      pepw: 'Please enter password',
-      pwcnbe: 'Password cannot be empty',
-      enpw: 'Enter a new password (leave empty to remove)',
-    },
-    'zh': {
-      pepw: '请输入密码',
-      pwcnbe: '密码不能为空',
-      enpw: '输入新密码（留空可清除当前密码）',
-    }
-  }
-  const userLang = (navigator.language || navigator.userLanguage || 'en').split('-')[0]
-  const targetLang = ['zh', 'en'].includes(userLang) ? userLang : 'en'
-  return SUPPORTED_LANG[targetLang][key]
-}
+// 辅助函数 getI18n 现在从 app.js 全局作用域中获取
+// （已移除重复定义以避免与 app.js 冲突）
