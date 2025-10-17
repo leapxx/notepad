@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import { Router } from 'itty-router'
 import Cookies from 'cookie'
 import jwt from '@tsndr/cloudflare-worker-jwt'
+import { getAssetFromKV } from '@cloudflare/kv-asset-handler'
 import { queryNote, MD5, checkAuth, checkAppAuth, genRandomStr, returnPage, returnJSON, saltPw, getI18n } from './helper'
 import { SECRET, APP_PASSWORD } from './constant'
 
@@ -255,22 +256,33 @@ router.post('/:path', async request => {
     return returnJSON(10001, 'KV insert fail!')
 })
 
-router.get('*', async request => {
-    const url = new URL(request.url)
-    if (url.pathname.startsWith('/css/') || url.pathname.startsWith('/js/') || url.pathname.startsWith('/img/')) {
-        try {
-            return await getAssetFromKV(request)
-        } catch (e) {
-            return new Response('Not Found', { status: 404 })
-        }
-    }
-})
-
 router.all('*', (request) => {
     const lang = getI18n(request)
     return returnPage('Page404', { lang, title: '404' })
 })
 
 addEventListener('fetch', event => {
+    const url = new URL(event.request.url)
+
+    // 优先处理静态资源（支持 /static/ 前缀和直接路径）
+    if (url.pathname.startsWith('/static/') || url.pathname.startsWith('/css/') || url.pathname.startsWith('/js/') || url.pathname.startsWith('/img/') || url.pathname === '/favicon.ico') {
+        event.respondWith(
+            getAssetFromKV(event, {
+                mapRequestToAsset: req => {
+                    // 移除 /static 前缀以匹配 bucket 中的实际路径
+                    const url = new URL(req.url)
+                    if (url.pathname.startsWith('/static/')) {
+                        url.pathname = url.pathname.replace('/static', '')
+                    }
+                    return new Request(url.toString(), req)
+                }
+            }).catch(e => {
+                return new Response('Not Found', { status: 404 })
+            })
+        )
+        return
+    }
+
+    // 其他请求交给路由器处理
     event.respondWith(router.handle(event.request))
 })
