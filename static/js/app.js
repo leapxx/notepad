@@ -68,6 +68,15 @@ const copyAllContent = () => {
 const fallbackCopyText = (text) => {
     const $textarea = document.querySelector('#contents')
     if ($textarea) {
+        const originalDisplay = $textarea.style.display
+        const originalPosition = $textarea.style.position
+        const originalLeft = $textarea.style.left
+
+        // 临时显示但不影响布局（移到屏幕外）
+        $textarea.style.display = 'block'
+        $textarea.style.position = 'absolute'
+        $textarea.style.left = '-9999px'
+
         $textarea.select()
         $textarea.setSelectionRange(0, 99999)
         try {
@@ -75,6 +84,11 @@ const fallbackCopyText = (text) => {
             showToast(getI18n('cpyall'))
         } catch (err) {
             alert(getI18n('err'))
+        } finally {
+            // 恢复原状态
+            $textarea.style.display = originalDisplay
+            $textarea.style.position = originalPosition
+            $textarea.style.left = originalLeft
         }
     }
 }
@@ -156,6 +170,8 @@ const toggleViewMode = (viewMode) => {
     isViewMode = viewMode
     const $textarea = document.querySelector('#contents')
     const $previewMd = document.querySelector('#preview-md')
+    const $previewPlain = document.querySelector('#preview-plain')
+    const $preview = $previewMd || $previewPlain  // 统一处理两种预览
     const $divideLine = document.querySelector('.divide-line')
     const $btnEdit = document.querySelector('#btnEdit')
     const $btnDone = document.querySelector('#btnDone')
@@ -170,9 +186,9 @@ const toggleViewMode = (viewMode) => {
         document.body.classList.add('mobile-view-mode')
         if ($textarea) $textarea.style.display = 'none'
         if ($divideLine) $divideLine.style.display = 'none'
-        if ($previewMd) {
-            $previewMd.style.display = 'block'
-            $previewMd.style.flex = '1'
+        if ($preview) {
+            $preview.style.display = 'block'
+            $preview.style.flex = '1'
         }
         if ($btnEdit) $btnEdit.style.display = 'inline-block'
         if ($btnDone) $btnDone.style.display = 'none'
@@ -183,9 +199,9 @@ const toggleViewMode = (viewMode) => {
         document.body.classList.add('mobile-edit-mode')
         if ($textarea) $textarea.style.display = 'block'
         if ($divideLine) $divideLine.style.display = 'block'
-        if ($previewMd) {
-            $previewMd.style.display = 'block'
-            $previewMd.style.flex = '1'
+        if ($preview) {
+            $preview.style.display = 'block'
+            $preview.style.flex = '1'
         }
         if ($btnEdit) $btnEdit.style.display = 'none'
         if ($btnDone) $btnDone.style.display = 'inline-block'
@@ -324,9 +340,13 @@ window.addEventListener('DOMContentLoaded', function () {
     }
 
     // 移动端初始化
-    if (isMobile() && $topBar && $previewMd) {
+    if (isMobile() && $topBar) {
         $topBar.style.display = 'flex'
-        toggleViewMode(true) // 默认查看模式
+        // 只有存在预览元素时才切换到查看模式
+        const $preview = $previewPlain || $previewMd
+        if ($preview) {
+            toggleViewMode(true) // 默认查看模式
+        }
     }
 
     // 复制全文按钮
