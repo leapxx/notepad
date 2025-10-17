@@ -4,66 +4,9 @@ import Cookies from 'cookie'
 import jwt from '@tsndr/cloudflare-worker-jwt'
 import { queryNote, MD5, checkAuth, checkAppAuth, genRandomStr, returnPage, returnJSON, saltPw, getI18n } from './helper'
 import { SECRET, APP_PASSWORD } from './constant'
-import { readFileSync } from 'fs';
-import { join } from 'path';
 
 // init
 const router = Router()
-
-// 静态文件处理放在最前面
-router.get('/css/*', async request => {
-    try {
-        const filePath = request.url.split('/css/')[1];
-        const fullPath = join(process.cwd(), 'static', 'css', filePath);
-        const content = readFileSync(fullPath, 'utf8');
-
-        return new Response(content, {
-            headers: {
-                'Content-Type': 'text/css',
-                'Cache-Control': 'public, max-age=3600'
-            }
-        });
-    } catch (e) {
-        console.error('CSS file error:', e);
-        return new Response('Not Found', { status: 404 });
-    }
-});
-
-router.get('/js/*', async request => {
-    try {
-        const filePath = request.url.split('/js/')[1];
-        const fullPath = join(process.cwd(), 'static', 'js', filePath);
-        const content = readFileSync(fullPath, 'utf8');
-
-        return new Response(content, {
-            headers: {
-                'Content-Type': 'application/javascript',
-                'Cache-Control': 'public, max-age=3600'
-            }
-        });
-    } catch (e) {
-        console.error('JS file error:', e);
-        return new Response('Not Found', { status: 404 });
-    }
-});
-
-router.get('/img/*', async request => {
-    try {
-        const filePath = request.url.split('/img/')[1];
-        const fullPath = join(process.cwd(), 'static', 'img', filePath);
-        const content = readFileSync(fullPath);
-
-        return new Response(content, {
-            headers: {
-                'Content-Type': 'image/gif',
-                'Cache-Control': 'public, max-age=3600'
-            }
-        });
-    } catch (e) {
-        console.error('Image file error:', e);
-        return new Response('Not Found', { status: 404 });
-    }
-});
 
 router.get('/', async (request) => {
     const lang = getI18n(request)
