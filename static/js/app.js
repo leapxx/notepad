@@ -79,6 +79,77 @@ const fallbackCopyText = (text) => {
     }
 }
 
+// 字数统计
+const updateWordCount = (text) => {
+    const chars = text.length
+    // 中文字 + 英文单词数
+    const words = (text.match(/[\u4e00-\u9fa5]|[a-zA-Z]+/g) || []).length
+
+    const $wordCount = document.querySelector('#wordCount')
+    const $wordCountMobile = document.querySelector('#wordCountMobile')
+
+    const userLang = (navigator.language || navigator.userLanguage || 'en').split('-')[0]
+    const charsText = userLang === 'zh' ? '字符' : 'Chars'
+    const wordsText = userLang === 'zh' ? '字数' : 'Words'
+
+    const countText = `${charsText}: ${chars} | ${wordsText}: ${words}`
+
+    if ($wordCount) $wordCount.textContent = countText
+    if ($wordCountMobile) $wordCountMobile.textContent = countText
+}
+
+// 二维码功能
+const showQRCode = () => {
+    const $qrModal = document.querySelector('.qr-modal')
+    const $qrcode = document.querySelector('#qrcode')
+
+    if ($qrModal && $qrcode) {
+        // 清空之前的二维码
+        $qrcode.innerHTML = ''
+
+        // 生成新的二维码
+        const url = window.location.href
+        new QRCode($qrcode, {
+            text: url,
+            width: 256,
+            height: 256,
+            colorDark: '#000000',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.H
+        })
+
+        // 显示模态框
+        $qrModal.style.display = 'block'
+    }
+}
+
+// 导出功能
+const exportNote = () => {
+    const $textarea = document.querySelector('#contents')
+    if (!$textarea) return
+
+    const content = $textarea.value
+    const path = location.pathname.slice(1) || 'note'
+    const date = new Date().toISOString().slice(0, 10)
+
+    // 判断是否为 Markdown 模式
+    const isMdMode = document.querySelector('.opt-mode > input')?.checked
+    const ext = isMdMode ? 'md' : 'txt'
+
+    // 处理路径中的特殊字符
+    const safePath = path.replace(/[/\\:*?"<>|]/g, '-')
+    const filename = `${safePath}-${date}.${ext}`
+
+    // 创建 Blob 并下载
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = filename
+    a.click()
+    URL.revokeObjectURL(url)
+}
+
 // 查看/编辑模式切换
 let isViewMode = false
 const toggleViewMode = (viewMode) => {
@@ -232,9 +303,20 @@ window.addEventListener('DOMContentLoaded', function () {
     const $btnCopyAll = document.querySelector('#btnCopyAll')
     const $btnEdit = document.querySelector('#btnEdit')
     const $btnDone = document.querySelector('#btnDone')
+    const $qrBtn = document.querySelector('.opt-qr')
+    const $qrBtnMobile = document.querySelector('#btnQrMobile')
+    const $exportBtn = document.querySelector('.opt-export')
+    const $exportBtnMobile = document.querySelector('#btnExportMobile')
+    const $qrModal = document.querySelector('.qr-modal')
+    const $qrCloseBtn = document.querySelectorAll('.qr-modal .close-btn')[0]
 
     renderPlain($previewPlain, $textarea.value)
     renderMarkdown($previewMd, $textarea.value)
+
+    // 初始化字数统计
+    if ($textarea) {
+        updateWordCount($textarea.value)
+    }
 
     // 移动端初始化
     if (isMobile() && $topBar && $previewMd) {
@@ -270,6 +352,8 @@ window.addEventListener('DOMContentLoaded', function () {
     if ($textarea) {
         $textarea.oninput = throttle(function () {
             renderMarkdown($previewMd, $textarea.value)
+            // 更新字数统计
+            updateWordCount($textarea.value)
 
             $loading.style.display = 'inline-block'
             const data = {
@@ -394,6 +478,43 @@ window.addEventListener('DOMContentLoaded', function () {
                 $copyBtn.innerHTML = originText
                 $copyBtn.style.background = originColor
             }, 1500)
+        }
+    }
+
+    // 二维码按钮
+    if ($qrBtn) {
+        $qrBtn.onclick = function () {
+            showQRCode()
+        }
+    }
+
+    if ($qrBtnMobile) {
+        $qrBtnMobile.onclick = function () {
+            showQRCode()
+        }
+    }
+
+    // 二维码模态框关闭
+    if ($qrModal && $qrCloseBtn) {
+        $qrCloseBtn.onclick = function () {
+            $qrModal.style.display = 'none'
+        }
+        // 点击遮罩关闭
+        $qrModal.querySelector('.modal-mask').onclick = function () {
+            $qrModal.style.display = 'none'
+        }
+    }
+
+    // 导出按钮
+    if ($exportBtn) {
+        $exportBtn.onclick = function () {
+            exportNote()
+        }
+    }
+
+    if ($exportBtnMobile) {
+        $exportBtnMobile.onclick = function () {
+            exportNote()
         }
     }
 

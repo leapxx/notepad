@@ -105,6 +105,24 @@ body {
     z-index: 100;
 }
 
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.word-count {
+    font-size: 13px;
+    color: #666;
+    font-family: 'Monaco', 'Courier New', monospace;
+}
+
+.word-count-mobile {
+    font-size: 12px;
+    color: #666;
+    margin-right: 10px;
+}
+
 /* 工具栏按钮 */
 .opt {
     display: flex;
@@ -211,6 +229,33 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+.top-bar-left,
+.top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-qr-mobile,
+.btn-export-mobile {
+    background: #3a86ff;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    min-width: 44px;
+    min-height: 44px;
+    transition: all 0.2s ease;
+}
+
+.btn-qr-mobile:hover,
+.btn-export-mobile:hover {
+    background: #2d6ff3;
+    transform: translateY(-1px);
+}
+
 .top-bar button {
     background: #3a86ff;
     color: white;
@@ -271,6 +316,56 @@ body {
 .toast.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
+}
+
+/* 二维码模态框 */
+.qr-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+}
+
+.qr-modal .modal-content {
+    position: relative;
+    background: white;
+    max-width: 400px;
+    margin: 100px auto;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.qr-modal .modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.qr-modal #qrcode {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+}
+
+.qr-modal #qrcode img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.qr-tip {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
 }
 
 /* 移动端视图模式调整 */
@@ -358,5 +453,23 @@ body {
     .toast {
         background: rgba(255, 255, 255, 0.9);
         color: #1a1a1a;
+    }
+
+    .word-count,
+    .word-count-mobile {
+        color: #aaa;
+    }
+
+    .qr-modal .modal-content {
+        background: #2d2d2d;
+        color: #e0e0e0;
+    }
+
+    .qr-modal #qrcode {
+        background: white;
+    }
+
+    .qr-tip {
+        color: #aaa;
     }
 }

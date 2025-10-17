@@ -18,10 +18,15 @@ const FOOTER = ({ lang, isEdit, updateAt, pw, mode, share }) => `
                 <button class="opt-button opt-pw">${pw ? SUPPORTED_LANG[lang].changePW : SUPPORTED_LANG[lang].setPW}</button>
                 ${SWITCHER('Markdown', mode === 'md', 'opt-mode')}
                 ${SWITCHER(SUPPORTED_LANG[lang].share, share, 'opt-share')}
+                <button class="opt-button opt-qr" title="${SUPPORTED_LANG[lang].qrCode}">📱 ${SUPPORTED_LANG[lang].qrCode}</button>
+                <button class="opt-button opt-export" title="${SUPPORTED_LANG[lang].exportNote}">⬇️ ${SUPPORTED_LANG[lang].exportNote}</button>
             </div>
             ` : ''
     }
-        ${updateAt ? `<span class="last-modified">${SUPPORTED_LANG[lang].lastModified} ${dayjs.unix(updateAt).fromNow()}</span>` : ''}
+        <div class="footer-right">
+            ${isEdit ? `<span class="word-count" id="wordCount">${SUPPORTED_LANG[lang].chars}: 0 | ${SUPPORTED_LANG[lang].words}: 0</span>` : ''}
+            ${updateAt ? `<span class="last-modified">${SUPPORTED_LANG[lang].lastModified} ${dayjs.unix(updateAt).fromNow()}</span>` : ''}
+        </div>
     </div>
 `
 const MODAL = lang => `
@@ -35,12 +40,29 @@ const MODAL = lang => `
         </div>
     </div>
 </div>
+<div class="modal qr-modal">
+    <div class="modal-mask"></div>
+    <div class="modal-content">
+        <span class="close-btn">x</span>
+        <div class="modal-body">
+            <div id="qrcode"></div>
+            <p class="qr-tip">${SUPPORTED_LANG[lang].scanToView}</p>
+        </div>
+    </div>
+</div>
 `
 const TOP_BAR = ({ lang, isEdit }) => isEdit ? `
     <div class="top-bar" id="topBar" style="display: none;">
-        <button class="btn-copy-all" id="btnCopyAll">📋 ${SUPPORTED_LANG[lang].copyAll}</button>
-        <button class="btn-edit" id="btnEdit">${SUPPORTED_LANG[lang].edit}</button>
-        <button class="btn-done" id="btnDone" style="display: none;">${SUPPORTED_LANG[lang].done}</button>
+        <div class="top-bar-left">
+            <button class="btn-copy-all" id="btnCopyAll">📋 ${SUPPORTED_LANG[lang].copyAll}</button>
+            <button class="btn-edit" id="btnEdit">${SUPPORTED_LANG[lang].edit}</button>
+            <button class="btn-done" id="btnDone" style="display: none;">${SUPPORTED_LANG[lang].done}</button>
+        </div>
+        <div class="top-bar-right">
+            <span class="word-count-mobile" id="wordCountMobile"></span>
+            <button class="btn-qr-mobile" id="btnQrMobile" title="${SUPPORTED_LANG[lang].qrCode}">📱</button>
+            <button class="btn-export-mobile" id="btnExportMobile" title="${SUPPORTED_LANG[lang].exportNote}">⬇️</button>
+        </div>
     </div>
 ` : ''
 const HTML = ({ lang, title, content, ext = {}, tips, isEdit, showPwPrompt, showAppAuthPrompt, returnUrl }) => `
@@ -76,6 +98,7 @@ const HTML = ({ lang, title, content, ext = {}, tips, isEdit, showPwPrompt, show
     ${FOOTER({ ...ext, isEdit, lang })}
     ${(ext.mode === 'md' || ext.share) ? `<script src="${CDN_PREFIX}/js/purify.min.js"></script>` : ''}
     ${ext.mode === 'md' ? `<script src="${CDN_PREFIX}/js/marked.min.js"></script>` : ''}
+    ${isEdit ? `<script src="${CDN_PREFIX}/js/qrcode.min.js"></script>` : ''}
     <script src="${CDN_PREFIX}/js/clip.js"></script>
     <script src="${CDN_PREFIX}/js/app.js"></script>
     ${showPwPrompt ? '<script>passwdPrompt()</script>' : ''}
