@@ -4,6 +4,7 @@
   "author": "s0urce",
   "license": "MIT",
   "devDependencies": {
+    "playwright": "^1.56.1",
     "wrangler": "^3.78.12"
   },
   "private": true,
