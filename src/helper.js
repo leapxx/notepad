@@ -79,3 +79,16 @@ export function getI18n(request) {
     const acceptList = al.split(',').map(lang => lang.split(';')[0].trim())
     return acceptList.find(lang => Object.keys(SUPPORTED_LANG).includes(lang)) || DEFAULT_LANG
 }
+
+export async function checkAppAuth(cookie) {
+    if (cookie.app_auth) {
+        const valid = await jwt.verify(cookie.app_auth, SECRET)
+        if (valid) {
+            const payload = jwt.decode(cookie.app_auth)
+            if (payload.app === true) {
+                return true
+            }
+        }
+    }
+    return false
+}
