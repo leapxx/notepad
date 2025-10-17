@@ -45,6 +45,12 @@ const ICON_SPRITE = `<svg xmlns="http://www.w3.org/2000/svg">
   <symbol id="icon-markdown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 15V9l2 2 2-2v6m4-6v6l2-2"/>
   </symbol>
+  <symbol id="icon-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+  </symbol>
+  <symbol id="icon-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>
+  </symbol>
 </svg>`
 
 const SWITCHER = (text, open, className = '') => `
@@ -94,6 +100,65 @@ const FOOTER = ({ lang, isEdit, updateAt, pw, mode, share }) => `
         </div>
     </div>
 `
+// Alpine.js 通用模态框（用于密码输入、确认对话框等）
+const ALPINE_MODAL = lang => `
+<div x-data="modalComponent()"
+     x-init="init(); window.addEventListener('show-modal', e => show(e.detail))"
+     x-show="open"
+     x-cloak
+     @click="handleBackdropClick($event)"
+     class="modal-overlay"
+     role="dialog"
+     aria-modal="true"
+     :aria-labelledby="type + '-modal-title'"
+     style="display: none;">
+
+    <div class="modal-dialog" @click.stop>
+        <!-- 模态框标题 -->
+        <h2 x-show="title"
+            x-text="title"
+            :id="type + '-modal-title'"
+            class="modal-title"></h2>
+
+        <!-- 消息内容 -->
+        <p x-show="message"
+           x-text="message"
+           class="modal-message"></p>
+
+        <!-- 密码输入框 -->
+        <div x-show="type === 'password'" class="modal-input-group">
+            <input x-model="value"
+                   :type="inputType"
+                   @keydown.enter="confirm()"
+                   class="modal-input"
+                   :placeholder="title"
+                   aria-label="Password input" />
+            <button @click="togglePasswordVisibility()"
+                    type="button"
+                    class="btn-toggle-pw"
+                    :aria-label="showPassword ? 'Hide password' : 'Show password'">
+                <svg class="icon w-5 h-5" aria-hidden="true">
+                    <use :href="showPassword ? '#icon-eye-off' : '#icon-eye'"></use>
+                </svg>
+            </button>
+        </div>
+
+        <!-- 按钮组 -->
+        <div class="modal-buttons">
+            <button @click="close()"
+                    x-show="type !== 'alert'"
+                    type="button"
+                    class="btn btn-secondary"
+                    x-text="cancelText"></button>
+            <button @click="confirm()"
+                    type="button"
+                    class="btn btn-primary"
+                    x-text="confirmText"></button>
+        </div>
+    </div>
+</div>
+`
+
 const MODAL = lang => `
 <div class="modal share-modal">
     <div class="modal-mask"></div>
@@ -228,6 +293,7 @@ const HTML = ({ lang, title, content, ext = {}, tips, isEdit, showPwPrompt, show
     </div>
 
     ${MODAL(lang)}
+    ${ALPINE_MODAL(lang)}
     ${FOOTER({ ...ext, isEdit, lang })}
 
     <!-- 脚本加载 -->
@@ -235,14 +301,16 @@ const HTML = ({ lang, title, content, ext = {}, tips, isEdit, showPwPrompt, show
     ${ext.mode === 'md' ? `<script src="${CDN_PREFIX}/js/marked.min.js"></script>` : ''}
     ${isEdit ? `<script src="${CDN_PREFIX}/js/qrcode.min.js"></script>` : ''}
 
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-    <!-- 组件和工具 -->
+    <!-- 组件和工具（必须在 Alpine.js 之前加载） -->
     <script src="${CDN_PREFIX}/js/icons.js"></script>
     <script src="${CDN_PREFIX}/js/components/modal.js"></script>
     <script src="${CDN_PREFIX}/js/components/toast.js"></script>
     <script src="${CDN_PREFIX}/js/clip.js"></script>
+
+    <!-- Alpine.js（defer 确保在 DOM 就绪后执行） -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- 主应用脚本 -->
     <script src="${CDN_PREFIX}/js/app.js"></script>
 
     ${showPwPrompt ? '<script>passwdPrompt()</script>' : ''}

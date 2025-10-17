@@ -34,17 +34,8 @@ const isMobile = () => {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 }
 
-// Toast 提示
-const showToast = (message) => {
-    const toast = document.querySelector('#toast')
-    if (toast) {
-        toast.textContent = message
-        toast.classList.add('show')
-        setTimeout(() => {
-            toast.classList.remove('show')
-        }, 2000)
-    }
-}
+// Toast 提示 - 使用全局 window.showToast (已在 toast.js 中定义)
+// 旧版本已移除，现在直接使用 window.showToast(), window.showSuccess(), window.showError()
 
 // 复制全文功能
 const copyAllContent = () => {
@@ -53,7 +44,7 @@ const copyAllContent = () => {
         const text = $textarea.value
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(() => {
-                showToast(getI18n('cpyall'))
+                window.showSuccess(getI18n('cpyall'))
             }).catch(err => {
                 // 降级到传统方法
                 fallbackCopyText(text)
@@ -81,9 +72,9 @@ const fallbackCopyText = (text) => {
         $textarea.setSelectionRange(0, 99999)
         try {
             document.execCommand('copy')
-            showToast(getI18n('cpyall'))
+            window.showSuccess(getI18n('cpyall'))
         } catch (err) {
-            alert(getI18n('err'))
+            window.showError(getI18n('err'))
         } finally {
             // 恢复原状态
             $textarea.style.display = originalDisplay
@@ -211,7 +202,7 @@ const toggleViewMode = (viewMode) => {
 }
 
 const errHandle = (err) => {
-    alert(`${getI18n('err')}: ${err}`)
+    window.showError(`${getI18n('err')}: ${err}`)
 }
 
 const throttle = (func, delay) => {
@@ -228,71 +219,81 @@ const throttle = (func, delay) => {
 }
 
 const appPasswordPrompt = (returnUrl) => {
-    const passwd = window.prompt(getI18n('peapw'))
-    if (passwd == null) {
-        // 用户取消，返回
-        window.history.back()
-        return
-    }
+    window.showPasswordPrompt({
+        title: getI18n('peapw'),
+        onConfirm: (passwd) => {
+            if (!passwd.trim()) {
+                window.showError(getI18n('pwcnbe'))
+                // 重新显示密码提示
+                setTimeout(() => appPasswordPrompt(returnUrl), 500)
+                return
+            }
 
-    if (!passwd.trim()) {
-        alert(getI18n('pwcnbe'))
-        return appPasswordPrompt(returnUrl)
-    }
-
-    window.fetch('/auth/app', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
+            window.fetch('/auth/app', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    passwd,
+                    returnUrl,
+                }),
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.err !== 0) {
+                        window.showError(getI18n('err') + ': ' + res.msg)
+                        // 重新显示密码提示
+                        setTimeout(() => appPasswordPrompt(returnUrl), 500)
+                        return
+                    }
+                    if (res.data.redirect) {
+                        window.location.href = res.data.redirect
+                    }
+                })
+                .catch(err => {
+                    errHandle(err)
+                    // 重新显示密码提示
+                    setTimeout(() => appPasswordPrompt(returnUrl), 500)
+                })
         },
-        body: JSON.stringify({
-            passwd,
-            returnUrl,
-        }),
+        onCancel: () => {
+            // 用户取消，返回
+            window.history.back()
+        }
     })
-        .then(res => res.json())
-        .then(res => {
-            if (res.err !== 0) {
-                alert(getI18n('err') + ': ' + res.msg)
-                return appPasswordPrompt(returnUrl)
-            }
-            if (res.data.redirect) {
-                window.location.href = res.data.redirect
-            }
-        })
-        .catch(err => {
-            errHandle(err)
-            appPasswordPrompt(returnUrl)
-        })
 }
 
 const passwdPrompt = () => {
-    const passwd = window.prompt(getI18n('pepw'))
-    if (passwd == null) return;
-
-    if (!passwd.trim()) {
-        alert(getI18n('pwcnbe'))
-    }
-    const path = location.pathname
-    window.fetch(`${path}/auth`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            passwd,
-        }),
+    window.showPasswordPrompt({
+        title: getI18n('pepw'),
+        onConfirm: (passwd) => {
+            if (!passwd.trim()) {
+                window.showError(getI18n('pwcnbe'))
+                return
+            }
+            const path = location.pathname
+            window.fetch(`${path}/auth`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    passwd,
+                }),
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.err !== 0) {
+                        return errHandle(res.msg)
+                    }
+                    if (res.data.refresh) {
+                        window.location.reload()
+                    }
+                })
+                .catch(err => errHandle(err))
+        }
     })
-        .then(res => res.json())
-        .then(res => {
-            if (res.err !== 0) {
-                return errHandle(res.msg)
-            }
-            if (res.data.refresh) {
-                window.location.reload()
-            }
-        })
-        .catch(err => errHandle(err))
 }
 
 const renderPlain = (node, text) => {
@@ -411,27 +412,29 @@ window.addEventListener('DOMContentLoaded', function () {
 
     if ($pwBtn) {
         $pwBtn.onclick = function () {
-            const passwd = window.prompt(getI18n('enpw'))
-            if (passwd == null) return;
-
-            const path = window.location.pathname
-            window.fetch(`${path}/pw`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    passwd: passwd.trim(),
-                }),
+            window.showPasswordPrompt({
+                title: getI18n('enpw'),
+                onConfirm: (passwd) => {
+                    const path = window.location.pathname
+                    window.fetch(`${path}/pw`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            passwd: passwd.trim(),
+                        }),
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            if (res.err !== 0) {
+                                return errHandle(res.msg)
+                            }
+                            window.showSuccess(passwd ? getI18n('pwss') : getI18n('pwrs'))
+                        })
+                        .catch(err => errHandle(err))
+                }
             })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.err !== 0) {
-                        return errHandle(res.msg)
-                    }
-                    alert(passwd ? getI18n('pwss') : getI18n('pwrs'))
-                })
-                .catch(err => errHandle(err))
         }
     }
 
