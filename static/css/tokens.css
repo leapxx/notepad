@@ -1,0 +1,271 @@
+/**
+ * Design Tokens - 设计系统变量
+ * 纸张主题色系 + 完整设计规范
+ */
+
+:root {
+  /* ========== 颜色系统 ========== */
+
+  /* 纸张色 - Paper Colors */
+  --color-paper-white: #fdfcf9;      /* 米白纸张 */
+  --color-paper-light: #f8f6f1;      /* 浅黄纸张 */
+  --color-paper-cream: #f5f2e8;      /* 奶油纸张 */
+  --color-paper-shadow: rgba(62, 58, 52, 0.08);  /* 纸张阴影 */
+
+  /* 墨水色 - Ink Colors */
+  --color-ink-black: #2c2927;        /* 深墨色 */
+  --color-ink-gray: #5a5550;         /* 灰墨色 */
+  --color-ink-light: #8b8580;        /* 淡墨色 */
+  --color-ink-blue: #3a5f8f;         /* 蓝墨水 */
+  --color-ink-red: #b84e4e;          /* 红墨水（错误） */
+
+  /* 强调色 - Accent Colors */
+  --color-accent-primary: #5b8fb9;   /* 主要强调（钢笔蓝） */
+  --color-accent-primary-hover: #4a7a9f;
+  --color-accent-primary-light: rgba(91, 143, 185, 0.1);
+  --color-accent-success: #6b9b6e;   /* 成功绿 */
+  --color-accent-warning: #d4a256;   /* 警告黄 */
+  --color-accent-error: #c55d5d;     /* 错误红 */
+
+  /* 中性色 - Neutral Colors */
+  --color-border-light: rgba(0, 0, 0, 0.08);
+  --color-border-medium: rgba(0, 0, 0, 0.12);
+  --color-border-strong: rgba(0, 0, 0, 0.2);
+
+  /* 背景色 - Background Colors */
+  --color-bg-base: #f0ede5;          /* 桌面背景（木桌） */
+  --color-bg-overlay: rgba(0, 0, 0, 0.4);  /* 遮罩 */
+  --color-bg-glass: rgba(255, 255, 255, 0.95);  /* 毛玻璃 */
+
+  /* ========== 深色模式 ========== */
+  --color-dark-paper: #2d2d2d;
+  --color-dark-paper-light: #363636;
+  --color-dark-ink: #e5e3df;
+  --color-dark-ink-gray: #b8b5b0;
+  --color-dark-bg: #1a1a1a;
+  --color-dark-border: rgba(255, 255, 255, 0.1);
+
+
+  /* ========== 字体系统 ========== */
+
+  /* 字体家族 - Font Families */
+  --font-sans:
+    system-ui,
+    -apple-system,
+    'SF Pro Text',
+    'Segoe UI',
+    'Noto Sans CJK SC',
+    'PingFang SC',
+    'Microsoft YaHei',
+    sans-serif;
+
+  --font-serif:
+    'Georgia',
+    'Noto Serif CJK SC',
+    'STSong',
+    'SimSun',
+    serif;
+
+  --font-mono:
+    'SF Mono',
+    'Monaco',
+    'Cascadia Code',
+    'Consolas',
+    'Courier New',
+    monospace;
+
+  /* 字体大小 - Font Sizes (基于 16px) */
+  --text-xs: 0.75rem;      /* 12px - 辅助文本 */
+  --text-sm: 0.875rem;     /* 14px - 小文本 */
+  --text-base: 1rem;       /* 16px - 正文 */
+  --text-lg: 1.125rem;     /* 18px - 大文本 */
+  --text-xl: 1.25rem;      /* 20px - 标题 */
+  --text-2xl: 1.5rem;      /* 24px - 大标题 */
+
+  /* 行高 - Line Heights */
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.75;
+
+  /* 字重 - Font Weights */
+  --font-normal: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+
+
+  /* ========== 间距系统 (8pt Grid) ========== */
+  --space-1: 0.25rem;    /* 4px */
+  --space-2: 0.5rem;     /* 8px */
+  --space-3: 0.75rem;    /* 12px */
+  --space-4: 1rem;       /* 16px */
+  --space-5: 1.25rem;    /* 20px */
+  --space-6: 1.5rem;     /* 24px */
+  --space-8: 2rem;       /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+
+  /* A4 纸张边距 */
+  --paper-padding-x: 25mm;
+  --paper-padding-y: 30mm;
+
+
+  /* ========== 圆角系统 ========== */
+  --radius-sm: 4px;
+  --radius-base: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+
+  /* ========== 阴影系统 ========== */
+
+  /* 纸张阴影 - Paper Shadows */
+  --shadow-paper:
+    0 1px 3px rgba(62, 58, 52, 0.06),
+    0 4px 8px rgba(62, 58, 52, 0.08),
+    0 10px 24px rgba(62, 58, 52, 0.1);
+
+  --shadow-paper-hover:
+    0 2px 4px rgba(62, 58, 52, 0.08),
+    0 8px 16px rgba(62, 58, 52, 0.12),
+    0 16px 32px rgba(62, 58, 52, 0.14);
+
+  /* 组件阴影 - Component Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-base: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.2);
+
+  /* 内阴影 */
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+
+  /* 焦点阴影 */
+  --shadow-focus: 0 0 0 3px var(--color-accent-primary-light);
+
+
+  /* ========== 层级系统 ========== */
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+  --z-toast: 800;
+
+
+  /* ========== 过渡动画 ========== */
+  --duration-instant: 100ms;
+  --duration-fast: 200ms;
+  --duration-base: 300ms;
+  --duration-slow: 400ms;
+  --duration-slower: 600ms;
+
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+
+  /* ========== 断点系统 ========== */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+
+  /* ========== 触控目标 ========== */
+  --touch-target-min: 44px;  /* iOS/Android 最小触控区域 */
+
+
+  /* ========== 纸张纹理 ========== */
+  --paper-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.015 0' /%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.5' /%3E%3C/svg%3E");
+}
+
+
+/* ========== 深色模式覆盖 ========== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-paper-white: var(--color-dark-paper);
+    --color-paper-light: var(--color-dark-paper-light);
+    --color-paper-cream: #3a3a3a;
+    --color-paper-shadow: rgba(0, 0, 0, 0.3);
+
+    --color-ink-black: var(--color-dark-ink);
+    --color-ink-gray: var(--color-dark-ink-gray);
+    --color-ink-light: #898682;
+
+    --color-bg-base: var(--color-dark-bg);
+    --color-bg-glass: rgba(45, 45, 45, 0.95);
+
+    --color-border-light: var(--color-dark-border);
+    --color-border-medium: rgba(255, 255, 255, 0.15);
+    --color-border-strong: rgba(255, 255, 255, 0.25);
+
+    /* 纸张阴影在深色模式下更强 */
+    --shadow-paper:
+      0 1px 3px rgba(0, 0, 0, 0.2),
+      0 4px 8px rgba(0, 0, 0, 0.3),
+      0 10px 24px rgba(0, 0, 0, 0.4);
+  }
+}
+
+
+/* ========== 辅助 CSS 类 ========== */
+
+/* 焦点指示器 - 仅键盘操作时显示 */
+.focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* 触控目标保证 */
+.touch-target {
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+}
+
+/* 视觉隐藏但屏幕阅读器可读 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* 跳过导航链接 */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-accent-primary);
+  color: white;
+  padding: var(--space-2) var(--space-4);
+  text-decoration: none;
+  border-radius: var(--radius-base);
+  z-index: var(--z-toast);
+  transition: top var(--duration-fast) var(--ease-out);
+}
+
+.skip-link:focus {
+  top: var(--space-2);
+}
+
+/* 禁用状态 */
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}

@@ -1,0 +1,469 @@
+/**
+ * Base Styles - 基础样式和重置
+ * 应用设计 tokens 并设置全局基础样式
+ */
+
+/* ========== CSS Reset ========== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--color-ink-black);
+  background: var(--color-bg-base);
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+/* ========== 滚动条美化 ========== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink-light);
+  border-radius: var(--radius-full);
+  transition: background var(--duration-fast) var(--ease-out);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-gray);
+}
+
+@media (prefers-color-scheme: dark) {
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+}
+
+
+/* ========== 焦点样式 ========== */
+
+/* 移除默认焦点样式 */
+:focus {
+  outline: none;
+}
+
+/* 仅键盘导航时显示焦点指示器 */
+:focus-visible {
+  outline: 2px solid var(--color-accent-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  box-shadow: var(--shadow-focus);
+  z-index: var(--z-base);
+}
+
+
+/* ========== 选择文本样式 ========== */
+
+::selection {
+  background: var(--color-accent-primary-light);
+  color: var(--color-ink-black);
+}
+
+@media (prefers-color-scheme: dark) {
+  ::selection {
+    background: rgba(91, 143, 185, 0.3);
+    color: var(--color-dark-ink);
+  }
+}
+
+
+/* ========== 图片和媒体 ========== */
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+img {
+  border-style: none;
+}
+
+
+/* ========== 表单元素 ========== */
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+  cursor: pointer;
+}
+
+button:disabled,
+[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-ink-light);
+  opacity: 1;
+}
+
+
+/* ========== 链接 ========== */
+
+a {
+  color: var(--color-accent-primary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+a:hover {
+  color: var(--color-accent-primary-hover);
+  text-decoration: underline;
+}
+
+
+/* ========== 标题和文本 ========== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-tight);
+  margin: 0;
+}
+
+p {
+  margin: 0;
+}
+
+
+/* ========== 列表 ========== */
+
+ul, ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+
+/* ========== 表格 ========== */
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+
+/* ========== 预格式化文本 ========== */
+
+pre,
+code,
+kbd,
+samp {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+
+/* ========== 纸张容器基础样式 ========== */
+
+.note-container {
+  position: relative;
+  max-width: 210mm;
+  min-height: 297mm;
+  margin: var(--space-8) auto;
+  background: var(--color-paper-white);
+  box-shadow: var(--shadow-paper);
+  transition:
+    box-shadow var(--duration-base) var(--ease-out),
+    transform var(--duration-base) var(--ease-out);
+}
+
+.note-container:hover {
+  box-shadow: var(--shadow-paper-hover);
+}
+
+/* 纸张纹理 */
+.note-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: var(--paper-texture);
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 纸张边缘装饰 */
+.note-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--color-border-light);
+  pointer-events: none;
+  z-index: 0;
+}
+
+
+/* ========== 辅助类 ========== */
+
+/* 隐藏 */
+.hide {
+  display: none !important;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+/* 文本对齐 */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* 文本大小 */
+.text-xs { font-size: var(--text-xs); }
+.text-sm { font-size: var(--text-sm); }
+.text-base { font-size: var(--text-base); }
+.text-lg { font-size: var(--text-lg); }
+.text-xl { font-size: var(--text-xl); }
+.text-2xl { font-size: var(--text-2xl); }
+
+/* 字重 */
+.font-normal { font-weight: var(--font-normal); }
+.font-medium { font-weight: var(--font-medium); }
+.font-semibold { font-weight: var(--font-semibold); }
+.font-bold { font-weight: var(--font-bold); }
+
+/* 间距辅助类 */
+.m-0 { margin: 0; }
+.p-0 { padding: 0; }
+
+
+/* ========== 加载动画 ========== */
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-4px);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(4px);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-fadeIn {
+  animation: fadeIn var(--duration-base) var(--ease-out);
+}
+
+.animate-fadeOut {
+  animation: fadeOut var(--duration-base) var(--ease-out);
+}
+
+.animate-slideUp {
+  animation: slideUp var(--duration-base) var(--ease-out);
+}
+
+.animate-slideDown {
+  animation: slideDown var(--duration-base) var(--ease-out);
+}
+
+.animate-shake {
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+
+/* ========== 移动端基础适配 ========== */
+
+@media (max-width: 768px) {
+  .note-container {
+    margin: 0;
+    max-width: 100%;
+    min-height: 100vh;
+    box-shadow: none;
+  }
+
+  .note-container:hover {
+    box-shadow: none;
+  }
+
+  .note-container::after {
+    border: none;
+  }
+}
+
+
+/* ========== 打印样式 ========== */
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .note-container {
+    margin: 0;
+    box-shadow: none;
+    max-width: 100%;
+  }
+
+  /* 隐藏工具栏和控制元素 */
+  .footer,
+  .top-bar,
+  .modal,
+  .toast,
+  button,
+  .opt-button {
+    display: none !important;
+  }
+
+  /* 显示所有内容 */
+  .contents {
+    display: block !important;
+  }
+}
+
+
+/* ========== 减少动画（可访问性） ========== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

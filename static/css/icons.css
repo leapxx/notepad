@@ -1,0 +1,92 @@
+/**
+ * Icon Styles - 图标样式
+ */
+
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+}
+
+/* 尺寸类 */
+.w-3 { width: 0.75rem; height: 0.75rem; }
+.w-4 { width: 1rem; height: 1rem; }
+.w-5 { width: 1.25rem; height: 1.25rem; }
+.w-6 { width: 1.5rem; height: 1.5rem; }
+.w-8 { width: 2rem; height: 2rem; }
+.w-10 { width: 2.5rem; height: 2.5rem; }
+.w-12 { width: 3rem; height: 3rem; }
+
+.h-3 { height: 0.75rem; }
+.h-4 { height: 1rem; }
+.h-5 { height: 1.25rem; }
+.h-6 { height: 1.5rem; }
+.h-8 { height: 2rem; }
+.h-10 { height: 2.5rem; }
+.h-12 { height: 3rem; }
+
+/* 动画图标 */
+.icon-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* 图标按钮 */
+.icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2);
+  border-radius: var(--radius-base);
+  background: transparent;
+  border: none;
+  color: var(--color-ink-gray);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--ease-out);
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+}
+
+.icon-button:hover {
+  background: var(--color-accent-primary-light);
+  color: var(--color-accent-primary);
+}
+
+.icon-button:active {
+  transform: scale(0.95);
+}
+
+.icon-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* 图标按钮变体 */
+.icon-button-primary {
+  background: var(--color-accent-primary);
+  color: white;
+}
+
+.icon-button-primary:hover {
+  background: var(--color-accent-primary-hover);
+}
+
+.icon-button-success {
+  background: var(--color-accent-success);
+  color: white;
+}
+
+.icon-button-success:hover {
+  background: #5a8a5d;
+}
+
+.icon-button-error {
+  background: var(--color-accent-error);
+  color: white;
+}
+
+.icon-button-error:hover {
+  background: #a84545;
+}
