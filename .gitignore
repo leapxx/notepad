@@ -170,3 +170,11 @@ dist
 
 .dev.vars
 .wrangler/
+
+# Testing and debugging files
+
+screenshots/
+debug-*.js
+debug-*.png
+check-*.js
+test-screenshot.png
