@@ -162,8 +162,12 @@ const toggleViewMode = (viewMode) => {
     const $btnCopyAll = document.querySelector('#btnCopyAll')
     const $footer = document.querySelector('.footer')
 
+    // 移除所有模式 class
+    document.body.classList.remove('mobile-view-mode', 'mobile-edit-mode')
+
     if (isViewMode) {
         // 查看模式：只显示预览
+        document.body.classList.add('mobile-view-mode')
         if ($textarea) $textarea.style.display = 'none'
         if ($divideLine) $divideLine.style.display = 'none'
         if ($previewMd) {
@@ -175,7 +179,8 @@ const toggleViewMode = (viewMode) => {
         if ($btnCopyAll) $btnCopyAll.style.display = 'inline-block'
         if ($footer) $footer.style.display = 'none'
     } else {
-        // 编辑模式：显示编辑器和预览
+        // 编辑模式：桌面端显示左右分栏，移动端只显示编辑器（CSS 控制）
+        document.body.classList.add('mobile-edit-mode')
         if ($textarea) $textarea.style.display = 'block'
         if ($divideLine) $divideLine.style.display = 'block'
         if ($previewMd) {
@@ -321,10 +326,6 @@ window.addEventListener('DOMContentLoaded', function () {
     // 移动端初始化
     if (isMobile() && $topBar && $previewMd) {
         $topBar.style.display = 'flex'
-        const $noteContainer = document.querySelector('.note-container')
-        if ($noteContainer) {
-            $noteContainer.style.marginTop = '60px'
-        }
         toggleViewMode(true) // 默认查看模式
     }
 

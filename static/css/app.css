@@ -36,16 +36,30 @@ body {
     padding: 0;
     background: #fff;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
 }
 
 /* 内容区域 */
 .stack {
     background: white;
-    height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
 
 .stack .layer_1,
-.stack .layer_2,
+.stack .layer_2 {
+    background: white;
+    margin: 0;
+    transform: none;
+    box-shadow: none;
+    border-radius: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .stack .layer_3 {
     background: white;
     margin: 0;
@@ -56,8 +70,9 @@ body {
 
 .stack .layer_1 .layer_2 .layer_3 {
     padding: 30mm 25mm;  /* A4 纸张标准页边距 */
-    min-height: calc(297mm - 60mm);
+    flex: 1;
     display: flex;
+    flex-direction: row;
 }
 
 /* 编辑器样式 */
@@ -67,7 +82,6 @@ body {
     line-height: 1.5;
     color: #2c3e50;
     flex: 1;
-    height: 100% !important;
     padding: 0 !important;
     margin: 0;
     border: none;
@@ -368,23 +382,30 @@ body {
     text-align: center;
 }
 
-/* 移动端视图模式调整 */
-@media (max-width: 768px) {
-    body.mobile-view-mode .note-container {
-        margin-top: 60px;
-    }
-}
-
 /* 移动端适配 */
 @media (max-width: 768px) {
     .note-container {
         margin: 0;
         max-width: 100%;
         min-height: 100vh;
+        height: auto;
     }
 
     .stack .layer_1 .layer_2 .layer_3 {
         padding: 15px;
+        padding-top: 75px;
+        flex-direction: column;
+    }
+
+    /* 移动端编辑模式：隐藏预览和分割线 */
+    body.mobile-edit-mode .divide-line,
+    body.mobile-edit-mode #preview-md {
+        display: none !important;
+    }
+
+    /* 移动端查看模式：调整 padding */
+    body.mobile-view-mode .stack .layer_1 .layer_2 .layer_3 {
+        padding-top: 15px;
     }
 
     .footer {
