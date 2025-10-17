@@ -36,7 +36,14 @@ const MODAL = lang => `
     </div>
 </div>
 `
-const HTML = ({ lang, title, content, ext = {}, tips, isEdit, showPwPrompt }) => `
+const TOP_BAR = ({ lang, isEdit }) => isEdit ? `
+    <div class="top-bar" id="topBar" style="display: none;">
+        <button class="btn-copy-all" id="btnCopyAll">📋 ${SUPPORTED_LANG[lang].copyAll}</button>
+        <button class="btn-edit" id="btnEdit">${SUPPORTED_LANG[lang].edit}</button>
+        <button class="btn-done" id="btnDone" style="display: none;">${SUPPORTED_LANG[lang].done}</button>
+    </div>
+` : ''
+const HTML = ({ lang, title, content, ext = {}, tips, isEdit, showPwPrompt, showAppAuthPrompt, returnUrl }) => `
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,9 +52,10 @@ const HTML = ({ lang, title, content, ext = {}, tips, isEdit, showPwPrompt }) =>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>${title} — Cloud Notepad</title>
     <link href="${CDN_PREFIX}/favicon.ico" rel="shortcut icon" type="image/ico" />
-    <link href="${CDN_PREFIX}/css/app.min.css" rel="stylesheet" media="screen" />
+    <link href="${CDN_PREFIX}/css/app.css" rel="stylesheet" media="screen" />
 </head>
 <body>
+    ${TOP_BAR({ lang, isEdit })}
     <div class="note-container">
         <div class="stack">
             <div class="layer_1">
@@ -63,13 +71,15 @@ const HTML = ({ lang, title, content, ext = {}, tips, isEdit, showPwPrompt }) =>
         </div>
     </div>
     <div id="loading"></div>
+    <div class="toast" id="toast"></div>
     ${MODAL(lang)}
     ${FOOTER({ ...ext, isEdit, lang })}
     ${(ext.mode === 'md' || ext.share) ? `<script src="${CDN_PREFIX}/js/purify.min.js"></script>` : ''}
     ${ext.mode === 'md' ? `<script src="${CDN_PREFIX}/js/marked.min.js"></script>` : ''}
-    <script src="${CDN_PREFIX}/js/clip.min.js"></script>
-    <script src="${CDN_PREFIX}/js/app.min.js"></script>
+    <script src="${CDN_PREFIX}/js/clip.js"></script>
+    <script src="${CDN_PREFIX}/js/app.js"></script>
     ${showPwPrompt ? '<script>passwdPrompt()</script>' : ''}
+    ${showAppAuthPrompt ? `<script>appPasswordPrompt('${returnUrl || '/'}')</script>` : ''}
 </body>
 </html>
 `
@@ -77,4 +87,5 @@ const HTML = ({ lang, title, content, ext = {}, tips, isEdit, showPwPrompt }) =>
 export const Edit = data => HTML({ isEdit: true, ...data })
 export const Share = data => HTML(data)
 export const NeedPasswd = data => HTML({ tips: SUPPORTED_LANG[data.lang].tipEncrypt, showPwPrompt: true, ...data })
+export const AppAuth = data => HTML({ tips: SUPPORTED_LANG[data.lang].tipAppAuth, showAppAuthPrompt: true, ...data })
 export const Page404 = data => HTML({ tips: SUPPORTED_LANG[data.lang].tip404, ...data })
