@@ -1,0 +1,482 @@
+/**
+ * 响应式设计优化
+ * 基于最佳实践的全面响应式方案
+ */
+
+/* ========== 1. 触摸目标优化 ========== */
+
+/* 确保所有交互元素至少 44x44px (WCAG 2.1 AAA 标准) */
+.switch {
+  /* 扩大触摸区域 */
+  min-width: var(--touch-target-min);
+  min-height: var(--touch-target-min);
+  width: 52px !important;
+  height: 28px !important;
+  /* 添加内边距以扩大可点击区域 */
+  padding: 8px;
+  margin: -8px; /* 负 margin 抵消 padding，保持视觉尺寸 */
+}
+
+.switch-group {
+  /* 确保整个开关组有足够的触摸区域 */
+  min-height: var(--touch-target-min);
+  padding: var(--space-3) var(--space-4);
+}
+
+/* 优化开关滑块尺寸 */
+.switch-slider {
+  /* 使用 calc 确保滑块填充整个 switch 容器 */
+  inset: 8px; /* 对应 switch 的内边距 */
+}
+
+.switch-slider:before {
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  top: 4px;
+}
+
+.switch input:checked + .switch-slider:before {
+  transform: translateX(24px);
+}
+
+
+/* ========== 2. 响应式断点系统 (Mobile-First) ========== */
+
+/*
+ * 断点设计哲学：
+ * - 320px: 最小移动设备（iPhone SE）
+ * - 375px: 标准小屏手机
+ * - 414px: 大屏手机
+ * - 768px: 平板竖屏
+ * - 1024px: 平板横屏/小笔记本
+ * - 1280px: 标准笔记本
+ * - 1920px: 高清显示器
+ */
+
+/* 基础样式：适用于 320px+ */
+:root {
+  /* 响应式字体大小基数 */
+  font-size: clamp(14px, 2vw, 16px);
+}
+
+/* ========== 3. 超小屏优化 (320px - 374px) ========== */
+@media (max-width: 374px) {
+  /* 缩小字体和间距 */
+  .opt-button {
+    font-size: var(--text-xs);
+    padding: var(--space-2) var(--space-3);
+    min-width: auto;
+  }
+
+  .footer {
+    padding: 0 var(--space-3);
+  }
+
+  .top-bar {
+    padding: 0 var(--space-3);
+  }
+
+  .word-count,
+  .word-count-mobile {
+    font-size: 9px;
+  }
+
+  .opt {
+    gap: var(--space-2);
+  }
+}
+
+/* ========== 4. 标准移动端 (375px - 767px) ========== */
+@media (min-width: 375px) and (max-width: 767px) {
+  .opt-button {
+    font-size: var(--text-sm);
+    padding: var(--space-2) var(--space-4);
+  }
+
+  .footer {
+    padding: 0 var(--space-4);
+  }
+
+  /* 优化横向滚动 */
+  .opt {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .opt::-webkit-scrollbar {
+    display: none; /* Chrome, Safari */
+  }
+}
+
+/* ========== 5. 大屏手机 (414px+) ========== */
+@media (min-width: 414px) and (max-width: 767px) {
+  .opt-button {
+    min-width: 100px;
+  }
+
+  .btn-copy-all {
+    flex: 0 0 auto;
+  }
+}
+
+/* ========== 6. 移动端横屏优化 ========== */
+@media (max-width: 896px) and (orientation: landscape) {
+  /* 横屏时减小顶部栏高度 */
+  .top-bar {
+    height: 48px;
+    min-height: 48px;
+  }
+
+  /* 调整内容区域 padding */
+  .stack .layer_1 .layer_2 .layer_3 {
+    padding-top: calc(48px + var(--space-3)) !important;
+  }
+
+  body.mobile-edit-mode .stack .layer_1 .layer_2 .layer_3 {
+    padding-bottom: calc(60px + var(--space-3)) !important;
+  }
+
+  /* 缩小按钮文字 */
+  .btn-copy-all,
+  .btn-edit,
+  .btn-done {
+    font-size: var(--text-sm);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  /* 隐藏不必要的文字，只保留图标 */
+  .btn-copy-all .icon ~ *,
+  .btn-edit .icon ~ *,
+  .btn-done .icon ~ * {
+    display: none;
+  }
+}
+
+/* ========== 7. 平板竖屏 (768px - 1023px) ========== */
+@media (min-width: 768px) and (max-width: 1023px) {
+  /* 恢复桌面端工具栏，但调整位置和大小 */
+  .footer {
+    right: var(--space-3);
+    padding: var(--space-4) var(--space-3);
+    max-width: 160px;
+  }
+
+  .opt-button {
+    min-width: 120px;
+    font-size: var(--text-sm);
+  }
+
+  .note-container {
+    margin: var(--space-4);
+  }
+
+  /* 优化 Markdown 分栏 */
+  .divide-line {
+    margin: 0 var(--space-4);
+  }
+
+  /* 字体大小调整 */
+  .contents {
+    font-size: 11pt;
+  }
+}
+
+/* ========== 8. 平板横屏 (1024px - 1279px) ========== */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .footer {
+    right: var(--space-4);
+    padding: var(--space-4);
+    max-width: 170px;
+  }
+
+  .opt-button {
+    min-width: 130px;
+  }
+
+  .note-container {
+    max-width: 180mm;
+    margin: var(--space-5) auto;
+  }
+
+  .contents {
+    font-size: 11.5pt;
+  }
+}
+
+/* ========== 9. 标准笔记本 (1280px - 1919px) ========== */
+@media (min-width: 1280px) and (max-width: 1919px) {
+  .footer {
+    right: var(--space-5);
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .opt-button {
+    min-width: 140px;
+  }
+
+  .note-container {
+    max-width: 190mm;
+  }
+
+  .contents {
+    font-size: 12pt;
+  }
+}
+
+/* ========== 10. 高清显示器 (1920px+) ========== */
+@media (min-width: 1920px) {
+  :root {
+    font-size: 18px; /* 增大基础字体 */
+  }
+
+  .footer {
+    right: max(var(--space-5), calc((100vw - 210mm) / 2 - 200px));
+    padding: var(--space-6) var(--space-5);
+  }
+
+  .opt-button {
+    min-width: 160px;
+    font-size: var(--text-base);
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .note-container {
+    max-width: 210mm;
+    margin: var(--space-8) auto;
+  }
+
+  .contents {
+    font-size: 13pt;
+  }
+
+  /* 增大工具栏字体 */
+  .word-count,
+  .last-modified {
+    font-size: var(--text-sm);
+  }
+}
+
+/* ========== 11. 超大屏幕 (2560px+) ========== */
+@media (min-width: 2560px) {
+  :root {
+    font-size: 20px;
+  }
+
+  .note-container {
+    max-width: 220mm;
+  }
+
+  .contents {
+    font-size: 14pt;
+    line-height: 1.8;
+  }
+
+  .footer {
+    padding: var(--space-7) var(--space-6);
+  }
+
+  .opt-button {
+    min-width: 180px;
+    padding: var(--space-5) var(--space-6);
+  }
+}
+
+/* ========== 12. 特殊屏幕比例优化 ========== */
+
+/* 超宽屏 (21:9 及以上) */
+@media (min-aspect-ratio: 21/9) {
+  .note-container {
+    max-width: 200mm;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* 工具栏靠近内容区域 */
+  .footer {
+    right: calc((100vw - 200mm) / 2 - 200px);
+  }
+}
+
+/* 超高屏 (竖屏笔记本或旋转显示器) */
+@media (max-aspect-ratio: 3/4) {
+  .footer {
+    /* 竖屏时工具栏可以更靠近边缘 */
+    right: var(--space-3);
+  }
+}
+
+/* ========== 13. 低高度屏幕优化 ========== */
+@media (max-height: 600px) {
+  /* 减小工具栏尺寸 */
+  .footer {
+    padding: var(--space-3);
+    max-height: 70vh;
+  }
+
+  .opt-button {
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-sm);
+  }
+
+  .opt {
+    gap: var(--space-2);
+  }
+
+  /* 紧凑模式 */
+  .switch-group {
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .footer-right {
+    gap: var(--space-2);
+    margin-top: var(--space-2);
+    padding-top: var(--space-2);
+  }
+}
+
+/* ========== 14. 可折叠设备 (Fold phones) ========== */
+@media (min-width: 280px) and (max-width: 653px) {
+  /* Galaxy Z Fold 外屏等超窄屏幕 */
+  .opt {
+    gap: var(--space-2);
+  }
+
+  .opt-button {
+    min-width: auto;
+    padding: var(--space-2);
+  }
+
+  /* 只显示图标 */
+  .opt-button .icon ~ * {
+    display: none;
+  }
+
+  .footer {
+    padding: 0 var(--space-2);
+  }
+}
+
+/* ========== 15. 高刷新率优化 ========== */
+@media (prefers-reduced-motion: no-preference) {
+  .opt-button,
+  .switch-slider,
+  .btn-copy-all,
+  .btn-edit,
+  .btn-done {
+    /* 使用更平滑的过渡 */
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+/* ========== 16. 低动效模式 ========== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ========== 17. 触摸设备优化 ========== */
+@media (hover: none) and (pointer: coarse) {
+  /* 移除 hover 效果，避免点击时出现粘滞状态 */
+  .opt-button:hover,
+  .btn-copy-all:hover,
+  .btn-edit:hover,
+  .btn-done:hover {
+    transform: none;
+  }
+
+  /* 增强 active 状态反馈 */
+  .opt-button:active,
+  .btn-copy-all:active,
+  .btn-edit:active,
+  .btn-done:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+
+  /* 增大所有交互元素的触摸区域 */
+  button,
+  a,
+  .switch,
+  .switch-group {
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+  }
+}
+
+/* ========== 18. 鼠标/触控板设备优化 ========== */
+@media (hover: hover) and (pointer: fine) {
+  /* 保留精细的 hover 效果 */
+  .opt-button,
+  .btn-copy-all,
+  .btn-edit,
+  .btn-done {
+    transition: all 0.2s ease;
+  }
+
+  /* 滚动条样式优化 */
+  .opt::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .opt::-webkit-scrollbar-thumb {
+    background: var(--color-border-medium);
+    border-radius: var(--radius-full);
+  }
+
+  .opt::-webkit-scrollbar-thumb:hover {
+    background: var(--color-ink-light);
+  }
+}
+
+/* ========== 19. 容器查询支持 (未来) ========== */
+/* 当浏览器支持容器查询时，可以基于容器大小而非视口大小调整样式 */
+@supports (container-type: inline-size) {
+  .note-container {
+    container-type: inline-size;
+    container-name: note;
+  }
+
+  @container note (max-width: 600px) {
+    .divide-line {
+      display: none;
+    }
+
+    #preview-md,
+    #preview-plain {
+      margin-top: var(--space-4);
+    }
+  }
+}
+
+/* ========== 20. 打印优化增强 ========== */
+@media print {
+  /* 确保内容适配纸张 */
+  @page {
+    margin: 2cm;
+    size: A4 portrait;
+  }
+
+  /* 避免元素跨页断开 */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+
+  p, ul, ol {
+    orphans: 3;
+    widows: 3;
+  }
+
+  /* 优化代码块打印 */
+  pre, code {
+    page-break-inside: avoid;
+    border: 1px solid #ccc;
+  }
+}
