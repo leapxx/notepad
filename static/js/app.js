@@ -193,6 +193,7 @@ const toggleViewMode = (viewMode) => {
             if ($textarea) {
                 $textarea.style.display = 'block'
                 $textarea.style.flex = '1'
+                $textarea.readOnly = true  // 查看模式下设置只读
             }
             if ($divideLine) $divideLine.style.display = 'none'
         }
@@ -203,7 +204,10 @@ const toggleViewMode = (viewMode) => {
     } else {
         // 编辑模式：桌面端显示左右分栏，移动端只显示编辑器（CSS 控制）
         document.body.classList.add('mobile-edit-mode')
-        if ($textarea) $textarea.style.display = 'block'
+        if ($textarea) {
+            $textarea.style.display = 'block'
+            $textarea.readOnly = false  // 编辑模式下移除只读
+        }
         if ($divideLine) $divideLine.style.display = 'block'
         if ($preview) {
             $preview.style.display = 'block'
@@ -518,19 +522,17 @@ window.addEventListener('DOMContentLoaded', function () {
     if ($shareModal) {
         $closeBtn.onclick = function () {
             $shareModal.style.display = 'none'
-
+        }
+        // 点击遮罩关闭
+        $shareModal.querySelector('.modal-mask').onclick = function () {
+            $shareModal.style.display = 'none'
         }
         $copyBtn.onclick = function () {
             clipboardCopy($shareInput.value)
-            const originText = $copyBtn.innerHTML
-            const originColor = $copyBtn.style.background
-            $copyBtn.innerHTML = getI18n('cpys')
-            $copyBtn.style.background = 'orange'
+            window.showSuccess(getI18n('cpys'))
             window.setTimeout(() => {
                 $shareModal.style.display = 'none'
-                $copyBtn.innerHTML = originText
-                $copyBtn.style.background = originColor
-            }, 1500)
+            }, 800)
         }
     }
 

@@ -434,6 +434,13 @@
 
 /* ========== 移动端适配 ========== */
 
+/* 移动端纯文本查看模式视觉反馈 */
+body.mobile-view-mode #contents[readonly] {
+  background: var(--color-paper-light);
+  cursor: default;
+  opacity: 0.95;
+}
+
 @media (max-width: 768px) {
   /* 移动端：footer 恢复底部栏布局 */
   .footer {
