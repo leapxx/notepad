@@ -313,8 +313,18 @@ const HTML = ({ lang, title, content, ext = {}, tips, isEdit, showPwPrompt, show
     <!-- 主应用脚本 -->
     <script src="${CDN_PREFIX}/js/app.js"></script>
 
-    ${showPwPrompt ? '<script>passwdPrompt()</script>' : ''}
-    ${showAppAuthPrompt ? `<script>appPasswordPrompt('${returnUrl || '/'}')</script>` : ''}
+    ${showPwPrompt ? `<script>
+        // 等待 Alpine.js 初始化完成后再显示密码提示
+        document.addEventListener('alpine:init', () => {
+            setTimeout(() => passwdPrompt(), 100)
+        })
+    </script>` : ''}
+    ${showAppAuthPrompt ? `<script>
+        // 等待 Alpine.js 初始化完成后再显示应用密码提示
+        document.addEventListener('alpine:init', () => {
+            setTimeout(() => appPasswordPrompt('${returnUrl || '/'}'), 100)
+        })
+    </script>` : ''}
 </body>
 </html>
 `
