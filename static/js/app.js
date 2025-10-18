@@ -360,11 +360,8 @@ window.addEventListener('DOMContentLoaded', function () {
     // 移动端初始化
     if (isMobile() && $topBar) {
         $topBar.style.display = 'flex'
-        // 只有存在预览元素时才切换到查看模式
-        const $preview = $previewPlain || $previewMd
-        if ($preview) {
-            toggleViewMode(true) // 默认查看模式
-        }
+        // 移动端默认进入查看模式（隐藏底部工具栏）
+        toggleViewMode(true)
     }
 
     // 复制全文按钮（移动端）
