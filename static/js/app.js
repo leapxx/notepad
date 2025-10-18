@@ -180,13 +180,21 @@ const toggleViewMode = (viewMode) => {
     document.body.classList.remove('mobile-view-mode', 'mobile-edit-mode')
 
     if (isViewMode) {
-        // 查看模式：只显示预览
+        // 查看模式
         document.body.classList.add('mobile-view-mode')
-        if ($textarea) $textarea.style.display = 'none'
-        if ($divideLine) $divideLine.style.display = 'none'
         if ($preview) {
+            // Markdown 模式：有预览，隐藏编辑器显示预览
+            if ($textarea) $textarea.style.display = 'none'
+            if ($divideLine) $divideLine.style.display = 'none'
             $preview.style.display = 'block'
             $preview.style.flex = '1'
+        } else {
+            // 纯文本模式：无预览，显示 textarea（作为查看内容）
+            if ($textarea) {
+                $textarea.style.display = 'block'
+                $textarea.style.flex = '1'
+            }
+            if ($divideLine) $divideLine.style.display = 'none'
         }
         if ($btnEdit) $btnEdit.style.display = 'inline-block'
         if ($btnDone) $btnDone.style.display = 'none'
