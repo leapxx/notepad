@@ -37,20 +37,27 @@ const isMobile = () => {
 // Toast 提示 - 使用全局 window.showToast (已在 toast.js 中定义)
 // 旧版本已移除，现在直接使用 window.showToast(), window.showSuccess(), window.showError()
 
-// 复制全文功能
+// 复制全文功能（添加防抖标志防止重复触发）
+let isCopying = false
 const copyAllContent = () => {
+    if (isCopying) return  // 防止重复点击
+
     const $textarea = document.querySelector('#contents')
     if ($textarea) {
+        isCopying = true
         const text = $textarea.value
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(() => {
                 window.showSuccess(getI18n('cpyall'))
+                setTimeout(() => { isCopying = false }, 500)  // 500ms后重置
             }).catch(err => {
                 // 降级到传统方法
                 fallbackCopyText(text)
+                setTimeout(() => { isCopying = false }, 500)
             })
         } else {
             fallbackCopyText(text)
+            setTimeout(() => { isCopying = false }, 500)
         }
     }
 }
@@ -270,6 +277,8 @@ const passwdPrompt = () => {
         onConfirm: (passwd) => {
             if (!passwd.trim()) {
                 window.showError(getI18n('pwcnbe'))
+                // 重新显示密码提示
+                setTimeout(() => passwdPrompt(), 500)
                 return
             }
             const path = location.pathname
@@ -285,13 +294,20 @@ const passwdPrompt = () => {
                 .then(res => res.json())
                 .then(res => {
                     if (res.err !== 0) {
-                        return errHandle(res.msg)
+                        errHandle(res.msg)
+                        // 重新显示密码提示
+                        setTimeout(() => passwdPrompt(), 500)
+                        return
                     }
                     if (res.data.refresh) {
                         window.location.reload()
                     }
                 })
-                .catch(err => errHandle(err))
+                .catch(err => {
+                    errHandle(err)
+                    // 重新显示密码提示
+                    setTimeout(() => passwdPrompt(), 500)
+                })
         }
     })
 }
