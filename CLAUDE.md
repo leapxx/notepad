@@ -62,6 +62,79 @@ npm run publish         # 部署到 Cloudflare Workers
 - `NODE_ENV` - 控制静态资源路径（开发用 `/static`，生产用 CDN）
 - `SCN_SALT` / `SCN_SECRET` - 本地测试用，生产环境通过 wrangler secrets 注入
 
+## 前端架构
+
+### CSS 设计系统（层级式）
+1. `tokens.css` - 设计变量（颜色、字体、间距、阴影、z-index）
+2. `base.css` - 基础重置和全局样式
+3. `components.css` - 可复用组件（按钮、表单、模态框、Toast）
+4. `responsive-optimized.css` - 响应式断点和移动端优化
+5. `app.css` - 应用特定样式（导入以上所有文件）
+
+### 移动端交互
+- **查看/编辑模式切换**：通过 `toggleViewMode(viewMode)` 函数（app.js:167）
+  - 查看模式：显示顶部栏，隐藏底部工具栏，纯文本模式下 textarea 设置 `readonly`
+  - 编辑模式：显示底部工具栏，textarea 可编辑
+- **状态管理**：通过 body class（`mobile-view-mode` / `mobile-edit-mode`）
+
+### Alpine.js 组件
+- **Modal Component** (components/modal.js) - 密码输入、确认对话框
+- **Toast Component** (components/toast.js) - 消息提示系统
+- 使用 `window.showPasswordPrompt()`、`window.showSuccess()`、`window.showError()` 调用
+
+## 应用密码保护（可选功能）
+
+### 设置方法
+通过 GitHub Secrets 设置 `SCN_APP_PASSWORD`，部署时会自动生成 hash 并注入到 Worker。
+
+### 工作原理
+- 访问根路径 `/` 或不存在的笔记时，需要验证应用密码
+- 认证通过后设置 `app_auth` cookie（有效期 7 天）
+- 使用独立的 JWT token，payload 为 `{ app: true }`
+
+### 相关代码
+- `src/index.js:16-25` - 根路径检查
+- `src/index.js:62-71` - 笔记路径检查
+- `src/index.js:98-121` - `/auth/app` 认证端点
+- `src/helper.js:83-94` - `checkAppAuth()` 函数
+
+## 重要交互细节
+
+### 移动端纯文本模式
+- 查看模式下 textarea 必须设置 `readonly = true`（app.js:196）
+- 编辑模式下 textarea 必须设置 `readonly = false`（app.js:209）
+- CSS 通过 `body.mobile-view-mode #contents[readonly]` 提供视觉反馈
+
+### 模态框交互
+- 所有模态框应支持遮罩点击关闭（与二维码模态框保持一致）
+- 分享模态框复制按钮使用 toast 反馈，而非内联样式
+
+## 开发调试
+
+### 本地开发静态资源
+- 开发环境：访问路径为 `/static/css/app.css`
+- 生产环境：访问路径为 `/css/app.css`（通过 CDN）
+- `src/constant.js` 中 `NODE_ENV` 控制 `CDN_PREFIX`
+
+### KV 数据结构
+**NOTES KV:**
+```javascript
+key: 笔记路径（如 "example"）
+value: 笔记内容（文本）
+metadata: {
+  pw: "hash",          // 密码 hash（可选）
+  mode: "md|plain",    // 模式（可选）
+  share: true|false,   // 是否分享（可选）
+  updateAt: 1234567890 // Unix 时间戳
+}
+```
+
+**SHARE KV:**
+```javascript
+key: MD5(笔记路径)
+value: 笔记路径
+```
+
 ## 注意事项
 
 - wrangler.toml 中的 KV binding IDs 会被 GitHub Actions 自动管理
